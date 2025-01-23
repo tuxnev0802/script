@@ -37,5 +37,4 @@ for i, v in pairs(game:GetDescendants()) do
     elseif v:IsA("Clothing") then
         v:Destroy()
     end
-    task.wait(0.1)
 end

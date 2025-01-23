@@ -1,39 +1,41 @@
-local BadInstances = {"FaceInstance", "ParticleEmitter", "Trail", "Smoke", "Fire", "Sparkles", "PostEffect", "Explosion", "Clothing", "BasePart"}
-local CanBeEnabled = {"ParticleEmitter", "Trail", "Smoke", "Fire", "Sparkles", "PostEffect"}
-
-local function CheckIfBad(Instance)
-    if Instance:IsA("FaceInstance") then
-        Instance.Transparency = 1
-    elseif table.find(CanBeEnabled, Instance.ClassName) then
-        Instance.Enabled = false
-    elseif Instance:IsA("Explosion") then
-        Instance.Visible = false
-    elseif Instance:IsA("Clothing") then
-        Instance:Destroy()
-    elseif Instance:IsA("BasePart") then
-        Instance.Material = Enum.Material.Plastic
-        Instance.Reflectance = 0
-    else
-        Instance:Destroy()
+--Lighting--
+local Lighting = game:GetService("Lighting")
+Lighting.GlobalShadows = false
+Lighting.Brightness = 0
+Lighting.FogEnd = 9e9
+for i,v in pairs(Lighting:GetChildren()) do
+    if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+        v.Enabled = false
     end
 end
 
-workspace:FindFirstChildOfClass("Terrain").WaterWaveSize = 0
-workspace:FindFirstChildOfClass("Terrain").WaterWaveSpeed = 0
-workspace:FindFirstChildOfClass("Terrain").WaterReflectance = 0
-workspace:FindFirstChildOfClass("Terrain").WaterTransparency = 0
+--Terrain--
+local Terrain = game:GetService("Workspace").Terrain
+Terrain.WaterWaveSize = 0
+Terrain.WaterWaveSpeed = 0
+Terrain.WaterReflectance = 0
+Terrain.WaterTransparency = 0
 
-game:GetService("Lighting").GlobalShadows = false
-game:GetService("Lighting").FogEnd = 9e9
-
-settings().Rendering.QualityLevel = 1
+--setting--
+settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
 
 for i, v in pairs(game:GetDescendants()) do
-    for i2, v2 in pairs(BadInstances) do
-        if v:IsA(v2) then
-            CheckIfBad(v)
-        end
+    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("Decal") or v:IsA("Texture") or v:IsA("FaceInstance") then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.Visible = false
+    elseif v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("PostEffect") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") or v:IsA("BasePart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("Clothing") then
+        v:Destroy()
     end
+    task.wait(0.1)
 end
-
-game.DescendantAdded:Connect(CheckIfBad)

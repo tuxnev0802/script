@@ -36,5 +36,8 @@ for i, v in pairs(game:GetDescendants()) do
         v.Reflectance = 0
     elseif v:IsA("Clothing") then
         v:Destroy()
+    elseif v:IsA("Highlight") then
+        v.OutlineTransparency = 1
+        v.FillTransparency = 1
     end
 end

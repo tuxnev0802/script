@@ -5,7 +5,7 @@ Lighting.Brightness = 0
 Lighting.FogEnd = 9e9
 for i,v in pairs(Lighting:GetChildren()) do
     if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
-        v.Enabled = false
+        v:Destroy()
     end
 end
 
